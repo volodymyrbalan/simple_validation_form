@@ -15,9 +15,18 @@
 					$scope.massage = userDetails.name
 						+ "(" + userDetails.email +") (" + userDetails.agreed +")";	
 				};
-
-				
-			};
+				//in order to get rid of the duplication of code, you can use methods such getError
+				$scope.getError = function (error) {
+                    if (angular.isDefined(error)) {
+                        if (error.required) {
+                            return "The field must not be empty";
+                        } 
+                        else if (error.email) {
+                            return "Please enter a valid email";
+                        }
+                    }
+                };		
+			});
 	</script>
 </head>
 <body>
@@ -36,15 +45,19 @@
 								<label>Email:</label>
 								<input name="userEmail" type="email" class="form-control" required ng-model="newUser.email">
 							</div>
+							
+							<div class="error" ng-show="myForm.userEmail.$invalid && myForm.userEmail.$dirty">
+                        		{{getError(myForm.userEmail.$error)}}
+                    		</div>
 
 							<div class="checkbox">
 								<label>
-									<input name="agreed" type="checkbox">
+									<input name="agreed" type="checkbox" ng-model="newUser.agreed" required>
 									I agree to the terms of use
 								</label>
 							</div>
 
-							<button type="submit" class="btn btn-primary btn-block">
+							<button type="submit" class="btn btn-primary btn-block" ng-disabled="myForm.$invalid">
 								OK
 							</button>
 						</div>
